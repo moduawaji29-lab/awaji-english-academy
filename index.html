@@ -288,7 +288,49 @@ const extraLessonTopics = [
 ['Money and shopping','Everyday English','Ask prices, compare products, and confirm change.','How much does it cost? Do you have a smaller size?','A tambayi farashi, kwatanta kaya, da tabbatar da canji.'],
 ['Study habits and revision','Learning skills','Use spaced revision, short daily practice, and your own example sentences.','Review yesterday’s words before learning five new ones.','Maimaita darasin jiya kafin koyon sababbin kalmomi; a ƙirƙiri jimloli da kai.']
 ];
-extraLessonTopics.forEach((x)=>lessons.push([x[0],x[1],x[2],[[x[3],x[4]],[x[3].split('. ')[0]+'.',x[4]]],x[4]]));
+// Corrected lesson builder: add a distinct example instead of copying the first sentence.
+const extraPracticeExamples = {
+  "Articles: a, an and the": ["She bought an umbrella and a notebook.", "Ta sayi laima da littafin rubutu."],
+  "Singular and plural nouns": ["The children put their bags beside the boxes.", "Yaran sun ajiye jakunkunansu kusa da kwalayen."],
+  "Possessive adjectives": ["Our teacher asked us to bring our books.", "Malamarmu ta ce mu kawo littattafanmu."],
+  "There is and there are": ["There are two pharmacies near my house.", "Akwai shagunan magani biyu kusa da gidana."],
+  "Can and cannot": ["My younger brother can read, but he cannot drive.", "Ƙanina yana iya karatu, amma ba ya iya tuƙi."],
+  "Should and must": ["You should practise daily, and you must follow the safety rules.", "Ya kamata ka yi atisaye kullum, kuma dole ka bi dokokin tsaro."],
+  "Comparatives": ["This exercise is easier than yesterday's exercise.", "Wannan atisayen ya fi na jiya sauƙi."],
+  "Superlatives": ["That was the most interesting book in the library.", "Wannan shi ne littafi mafi ban sha'awa a ɗakin karatu."],
+  "Countable and uncountable nouns": ["We bought a few tomatoes and a little rice.", "Mun sayi tumatir kaɗan da shinkafa kaɗan."],
+  "Prepositions of time": ["Our lesson starts at nine on Friday in July.", "Darasinmu zai fara ƙarfe tara ranar Juma'a a watan Yuli."],
+  "Prepositions of place": ["Your shoes are beside the door, not under the bed.", "Takalmarka tana gefen ƙofa, ba ƙarƙashin gado ba."],
+  "Adverbs of frequency": ["She rarely arrives late because she usually leaves early.", "Ba kasafai take zuwa a makare ba domin yawanci tana tashi da wuri."],
+  "Present simple negatives": ["He does not eat meat, and I do not drink coffee.", "Ba ya cin nama, kuma ba na shan kofi."],
+  "Present simple questions": ["Where do your parents work, and when does your class begin?", "A ina iyayenka suke aiki, kuma yaushe ajinku yake farawa?"],
+  "Past simple negatives and questions": ["We did not miss the bus. Did we arrive on time?", "Ba mu rasa motar ba. Mun isa a kan lokaci?"],
+  "Future plans": ["She is going to study tonight and visit her aunt tomorrow.", "Za ta yi karatu yau da dare sannan ta ziyarci innarta gobe."],
+  "Present perfect: ever and never": ["Have you ever visited Lagos?", "Ka taɓa ziyartar Legas?"],
+  "First conditional": ["If you practise regularly, your speaking will improve.", "Idan ka yi atisaye akai-akai, iya maganarka za ta inganta."],
+  "Reported speech basics": ["Amina said that she needed more time.", "Amina ta ce tana buƙatar ƙarin lokaci."],
+  "Punctuation and capital letters": ["On Monday, Musa visited Kano. Did he return on Tuesday?", "Ranar Litinin, Musa ya ziyarci Kano. Ya dawo ranar Talata?"],
+  "Common mistakes: your and you're": ["You're responsible for bringing your bag.", "Kai ne ke da alhakin kawo jakarka."],
+  "Common mistakes: their, there, they're": ["They're waiting over there beside their car.", "Suna jira can kusa da motarsu."],
+  "Formal and informal English": ["Would you mind sending me the details by email?", "Don Allah, za ka iya aiko min da bayanan ta imel?"],
+  "Email writing": ["Could you please confirm the date of our next meeting?", "Don Allah, za ku iya tabbatar da ranar taronmu na gaba?"],
+  "Job interview English": ["My previous role taught me to solve problems and work with a team.", "Aikina na baya ya koya min warware matsaloli da aiki tare da ƙungiya."],
+  "Giving directions": ["The post office is opposite the hospital, beside the main road.", "Ofishin gidan waya yana gaban asibiti, kusa da babbar hanya."],
+  "Health and appointments": ["I would like to book an appointment for tomorrow morning.", "Ina so in ɗauki lokacin ganawa na gobe da safe."],
+  "Travel and transport": ["How much is a return ticket, and where can I board the bus?", "Nawa ne kuɗin tikitin komawa da dawowa, kuma ina zan shiga motar?"],
+  "Money and shopping": ["Could I compare these prices before I decide which one to buy?", "Zan iya kwatanta waɗannan farashin kafin in yanke shawarar wanda zan saya?"],
+  "Study habits and revision": ["I review my notes every evening and test myself at the weekend.", "Ina duba bayanan karatuna kowace yamma kuma ina gwada kaina a ƙarshen mako."]
+};
+extraLessonTopics.forEach((x) => {
+  const practice = extraPracticeExamples[x[0]];
+  const examples = [[x[3], x[4]]];
+  if (practice && practice[0].trim().toLowerCase() !== x[3].trim().toLowerCase()) {
+    examples.push(practice);
+  } else {
+    examples.push(["Practice: Write your own sentence using this lesson's rule.", "Atisaye: Ka rubuta jimlarka ta amfani da ƙa'idar wannan darasi."]);
+  }
+  lessons.push([x[0], x[1], x[2], examples, x[4]]);
+});
 const extraWords = [
 ['Accurate','daidai','Please give accurate information.'],['Advice','shawara','My teacher gave me useful advice.'],['Arrange','shirya','We need to arrange the chairs.'],['Avoid','guje wa','Avoid making the same mistake.'],['Benefit','amfani','Reading has many benefits.'],['Challenge','ƙalubale','Learning a language is a challenge.'],['Communicate','sadarwa','English helps us communicate with people.'],['Consider','yi la’akari','Please consider my suggestion.'],['Convenient','mai sauƙi/dacewa','Is tomorrow a convenient time?'],['Decision','shawara/zaɓi','It was a difficult decision.'],['Develop','haɓaka','Practice helps develop confidence.'],['Effective','mai tasiri','This is an effective method.'],['Effort','ƙoƙari','Your effort will bring progress.'],['Environment','muhalli','Keep your environment clean.'],['Essential','mai matuƙar muhimmanci','Sleep is essential for good health.'],['Experience','ƙwarewa/kwarewa','She has experience in teaching.'],['Familiar','sani','That word sounds familiar.'],['Flexible','mai sassauci','Our schedule is flexible.'],['Generous','mai karamci','Our neighbour is generous.'],['Gradually','a hankali kaɗan-kaɗan','Your pronunciation will improve gradually.'],['Habit','ɗabi’a','Reading is a useful habit.'],['Independent','mai zaman kansa','She is an independent learner.'],['Maintain','kiyayewa','Maintain a regular study routine.'],['Necessary','dole/mai muhimmanci','A passport is necessary for this trip.'],['Participate','shiga/halarta','Everyone can participate in the discussion.'],['Patient','mai haƙuri','Be patient with yourself.'],['Prefer','fi so','I prefer tea to coffee.'],['Prepare','shirya','Prepare your notes before class.'],['Prevent','hana','Washing hands helps prevent illness.'],['Purpose','manufa','What is the purpose of this meeting?'],['Recommend','ba da shawara','I recommend this book.'],['Reduce','rage','We should reduce waste.'],['Require','buƙata','This task requires attention.'],['Respect','girmamawa','Respect other people’s opinions.'],['Responsible','mai alhaki','She is responsible for the project.'],['Solution','mafita','We found a solution together.'],['Support','tallafi/taimako','My family supports my education.'],['Successful','mai nasara','A successful learner practises often.'],['Suitable','dacewa','This book is suitable for beginners.'],['Thoughtful','mai kula da ji/mai tunani','That was a thoughtful gift.'],['Useful','mai amfani','This phrase is useful at work.'],['Valuable','mai daraja','Your time is valuable.'],['Various','daban-daban','We discussed various topics.'],['Volunteer','mai aikin sa kai','She works as a volunteer.'],['Wise','mai hikima','It is wise to ask questions.'],['Willing','a shirye','I am willing to learn.'],['Achieve','cimma','You can achieve your goals.'],['Calm','mai natsuwa','Stay calm during the interview.'],['Depend','dogara','Success can depend on practice.'],['Encourage','ƙarfafa gwiwa','Teachers encourage students to speak.'],['Focus','mai da hankali','Focus on one skill at a time.'],['Improve','inganta','Daily practice will improve your writing.'],['Knowledge','ilimi','Knowledge grows when we share it.'],['Opportunity','dama','This is an opportunity to learn.'],['Progress','ci gaba','Small steps lead to progress.'],['Routine','tsari na yau da kullum','Create a simple study routine.'],['Skill','ƙwarewa','Listening is an important skill.'],['Trust','amincewa','Trust grows through honesty.'],['Wonder','yi mamaki/tambaya','I wonder where she lives.']
 ];
@@ -446,15 +488,5 @@ data.videoLessons={title:'Video Lessons — Teacher Classroom',desc:'A dedicated
 ['2. Teacher on the board: Grammar','PLANNED VIDEO: Teacher writes I am / she is / they are, models negatives and questions, then corrects common mistakes.','Learning goals: choose the correct form of “to be” and build questions.','After watching: pause before each answer and solve the exercise yourself.','Future media file: videos/grammar-am-is-are.mp4'],
 ['3. Tenses explained visually','PLANNED VIDEO: Teacher compares habits, actions happening now, completed past actions, and future plans using a timeline.','Examples: I work every day / I am working now / I worked yesterday / I will work tomorrow.','After watching: create one sentence for each time.','Future media file: videos/english-tenses.mp4'],
 ['4. Pronunciation with a teacher','PLANNED VIDEO: Teacher models syllable stress, vowel contrasts, and final sounds with repeat-after-me drills.','Practise: TA-ble, DOC-tor, ship/sheep, worked/played/wanted.','After watching: list three difficult words and practise them daily.','Future media file: videos/pronunciation.mp4'],
-['5. Role-play video: At the market','PLANNED VIDEO: Teacher plays buyer and seller and demonstrates polite bargaining.','Phrases: How much is this? Is that your best price? Could I have a receipt, please?','After watching: perform the dialogue and replace the product and price.','Future media file: videos/market-roleplay.mp4'],
-['6. Video player setup and playlist','This section is reserved for real video playback, not repeated written lessons. When an MP4 is uploaded, it can be placed in a video player with play, pause, captions, and full-screen controls.','Recommended format: MP4 (H.264 video and AAC audio). Keep each lesson focused on one skill and add captions where possible.','Planned playlists: Beginner classroom, Grammar on the board, Tenses explained, Pronunciation drills, Listening stories, and Revision.','No video is playing yet because media files have not been connected.'] ]};
-
-let historyStack=[];
-function openPage(id,push=true){const d=data[id];if(!d)return; if(page.classList.contains('open')&&push)historyStack.push({id:page.dataset.category});title.textContent=d.title;desc.textContent=d.desc;contents.replaceChildren();d.topics.forEach((topic,i)=>{const details=document.createElement('details');details.className='academy-topic';details.open=i===0;const summary=document.createElement('summary');summary.textContent=(i+1)+'. '+topic[0];details.append(summary);const body=document.createElement('div');body.className='academy-topic-body';topic.slice(1).forEach(line=>{const p=document.createElement('p');p.className=/^(Hausa:|Hausa guide:)/i.test(line)?'academy-hausa':'academy-example';p.textContent=line;body.append(p)});details.append(body);contents.append(details)});page.dataset.category=id;page.classList.add('open');document.body.style.overflow='hidden';page.scrollTop=0;if(push)history.pushState({academy:id},'', '#academy-'+id)}
-function closePage(){if(historyStack.length){const prev=historyStack.pop();openPage(prev.id,false);return}page.classList.remove('open');document.body.style.overflow='';if(location.hash.startsWith('#academy-'))history.replaceState({},'',location.pathname+location.search)}
-/* Removed duplicate capture-phase click handler; keep the primary lesson-card handlers active. */
-document.getElementById('academyBack').addEventListener('click',closePage);window.addEventListener('popstate',()=>{if(page.classList.contains('open')){page.classList.remove('open');document.body.style.overflow='';historyStack=[]}});
-})();
-</script>
-
-</body></html>
+['5. Role-play video: At the market','PLANNED VIDEO: Teacher plays buyer and seller and demonstrates polite bargaining.','Phrases: How much is this? Is that your best price? Could I have a receipt, please?','After watching: perform the dialogue and replace the produc
+Preview truncated for large file
