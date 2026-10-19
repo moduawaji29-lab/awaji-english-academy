@@ -1,6 +1,8 @@
 export default async function handler(req, res) {
   if (req.method !== "POST") {
-    return res.status(405).json({ error: "Method not allowed" });
+    return res.status(405).json({
+      error: "Method not allowed"
+    });
   }
 
   const apiKey = process.env.ELEVENLABS_API_KEY;
@@ -33,29 +35,40 @@ export default async function handler(req, res) {
           "Accept": "audio/mpeg"
         },
         body: JSON.stringify({
-  text,
-  model_id: "eleven_multilingual_v2",
-  output_format: "mp3_44100_128",
-  voice_settings: {
-    speed: 0.8,
-    stability: 0.5,
-    similarity_boost: 0.75
-  }
-})
+          text,
+          model_id: "eleven_multilingual_v2",
+          output_format: "mp3_44100_128",
+          voice_settings: {
+            speed: 0.8,
+            stability: 0.5,
+            similarity_boost: 0.75
+          }
+        })
+      }
+    );
 
     if (!response.ok) {
-      console.error("ElevenLabs error:", response.status);
+      const details = await response.text();
+      console.error(
+        "ElevenLabs error:",
+        response.status,
+        details
+      );
+
       return res.status(502).json({
-        error: "Audio generation failed. Check your voice access and account credits."
+        error: "Audio generation failed. Check Vercel logs."
       });
     }
 
-    const audio = Buffer.from(await response.arrayBuffer());
+    const audio = Buffer.from(
+      await response.arrayBuffer()
+    );
 
     res.setHeader("Content-Type", "audio/mpeg");
-    res.setHeader("Cache-Control", "private, max-age=3600");
+    res.setHeader("Cache-Control", "no-store");
 
     return res.status(200).send(audio);
+
   } catch (error) {
     console.error("Audio error:", error);
 
