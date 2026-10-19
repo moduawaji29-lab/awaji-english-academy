@@ -33,12 +33,15 @@ export default async function handler(req, res) {
           "Accept": "audio/mpeg"
         },
         body: JSON.stringify({
-          text,
-          model_id: "eleven_multilingual_v2",
-          output_format: "mp3_44100_128"
-        })
-      }
-    );
+  text,
+  model_id: "eleven_multilingual_v2",
+  output_format: "mp3_44100_128",
+  voice_settings: {
+    speed: 0.8,
+    stability: 0.5,
+    similarity_boost: 0.75
+  }
+})
 
     if (!response.ok) {
       console.error("ElevenLabs error:", response.status);
