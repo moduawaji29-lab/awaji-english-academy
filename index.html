@@ -1,0 +1,1479 @@
+<!DOCTYPE html>
+<html lang="ha">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#101a35">
+  <meta name="description" content="Awaji English Academy - Koyi Turanci cikin sauki ta hanyar Hausa.">
+  <title>Awaji English Academy</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+
+  <style>
+    :root {
+      --navy: #101a35;
+      --navy2: #182748;
+      --green: #b8f36b;
+      --green-dark: #244c25;
+      --bg: #f5f7fb;
+      --white: #ffffff;
+      --text: #17223b;
+      --muted: #8790a5;
+      --border: #e9edf4;
+      --radius: 22px;
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: "DM Sans", sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    button, input { font: inherit; }
+    button { cursor: pointer; }
+
+    button:focus-visible, a:focus-visible, input:focus-visible {
+      outline: 3px solid #9bdc59;
+      outline-offset: 3px;
+    }
+
+    .app {
+      width: 100%;
+      max-width: 1500px;
+      min-height: 100vh;
+      margin: auto;
+    }
+
+    .sidebar {
+      display: none;
+    }
+
+    .main { min-width: 0; }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 20px 18px 14px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .brand-icon {
+      width: 43px;
+      height: 43px;
+      flex-shrink: 0;
+      display: grid;
+      place-items: center;
+      border-radius: 15px;
+      background: var(--navy);
+      color: var(--green);
+      font-weight: 800;
+      font-size: 23px;
+      box-shadow: 0 7px 18px #101a3520;
+    }
+
+    .brand-name {
+      font-family: Manrope, sans-serif;
+      font-weight: 800;
+      font-size: 15px;
+      line-height: 1.2;
+    }
+
+    .brand-sub {
+      color: var(--muted);
+      font-size: 10px;
+      margin-top: 4px;
+    }
+
+    .top-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .icon-btn {
+      width: 40px;
+      height: 40px;
+      border: 1px solid var(--border);
+      background: white;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      font-size: 17px;
+      position: relative;
+    }
+
+    .avatar {
+      width: 40px;
+      height: 40px;
+      display: grid;
+      place-items: center;
+      border-radius: 14px;
+      background: #e6f5d5;
+      color: #325e27;
+      font-weight: 800;
+    }
+
+    .content { padding: 10px 18px 100px; }
+
+    .eyebrow {
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: #738099;
+    }
+
+    .welcome {
+      font-family: Manrope, sans-serif;
+      font-size: clamp(26px, 6vw, 38px);
+      letter-spacing: -1.5px;
+      line-height: 1.18;
+      margin: 9px 0 8px;
+      font-weight: 800;
+    }
+
+    .welcome span { color: #57932e; }
+
+    .welcome-sub {
+      margin: 0;
+      color: #78839a;
+      font-size: 13px;
+      line-height: 1.7;
+      max-width: 430px;
+    }
+
+    .hero {
+      margin-top: 23px;
+      position: relative;
+      overflow: hidden;
+      border-radius: 26px;
+      padding: 24px 21px;
+      background: linear-gradient(135deg, #14203f 0%, #20375b 100%);
+      color: white;
+      min-height: 240px;
+      box-shadow: 0 15px 36px #17274920;
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      width: 210px;
+      height: 210px;
+      border: 1px solid #ffffff13;
+      border-radius: 50%;
+      right: -65px;
+      top: -75px;
+      box-shadow: 0 0 0 24px #ffffff05, 0 0 0 49px #ffffff04;
+    }
+
+    .hero-content { position: relative; z-index: 1; max-width: 390px; }
+
+    .hero-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      background: #ffffff12;
+      border: 1px solid #ffffff20;
+      border-radius: 30px;
+      padding: 7px 11px;
+      color: #d7f6ba;
+      font-size: 10px;
+      font-weight: 700;
+    }
+
+    .hero h2 {
+      font-family: Manrope, sans-serif;
+      font-size: 25px;
+      line-height: 1.25;
+      letter-spacing: -.8px;
+      margin: 17px 0 9px;
+      max-width: 330px;
+    }
+
+    .hero p {
+      color: #c1cce0;
+      font-size: 12px;
+      line-height: 1.8;
+      max-width: 310px;
+      margin: 0;
+    }
+
+    .primary-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      margin-top: 20px;
+      padding: 13px 17px;
+      border: 0;
+      border-radius: 13px;
+      background: var(--green);
+      color: #1b3020;
+      font-size: 12px;
+      font-weight: 800;
+      text-decoration: none;
+      transition: transform .2s, filter .2s;
+    }
+
+    .primary-btn:active { transform: scale(.97); }
+    .primary-btn:hover { filter: brightness(1.04); }
+
+    .hero-symbol {
+      display: none;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 9px;
+      margin-top: 16px;
+    }
+
+    .stat {
+      padding: 14px 10px;
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      min-width: 0;
+    }
+
+    .stat-icon {
+      width: 32px;
+      height: 32px;
+      display: grid;
+      place-items: center;
+      border-radius: 11px;
+      font-size: 15px;
+      margin-bottom: 11px;
+    }
+
+    .stat:nth-child(1) .stat-icon { background: #eaf7d9; }
+    .stat:nth-child(2) .stat-icon { background: #e8efff; }
+    .stat:nth-child(3) .stat-icon { background: #fff0dc; }
+
+    .stat-number {
+      font-family: Manrope, sans-serif;
+      font-size: 21px;
+      font-weight: 800;
+      letter-spacing: -.7px;
+    }
+
+    .stat-label {
+      margin-top: 5px;
+      font-size: 10px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .section { margin-top: 31px; scroll-margin-top: 18px; }
+
+    .section-heading {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 15px;
+    }
+
+    .section-heading h2 {
+      margin: 0;
+      font-family: Manrope, sans-serif;
+      font-size: 18px;
+      letter-spacing: -.5px;
+    }
+
+    .section-heading p {
+      color: var(--muted);
+      font-size: 11px;
+      margin: 5px 0 0;
+    }
+
+    .text-link {
+      border: 0;
+      background: transparent;
+      color: #54852e;
+      font-weight: 800;
+      font-size: 11px;
+      white-space: nowrap;
+    }
+
+    .learning-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .learn-card {
+      min-width: 0;
+      min-height: 170px;
+      padding: 16px 14px;
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      text-align: left;
+      color: var(--text);
+      transition: transform .2s, box-shadow .2s;
+    }
+
+    .learn-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 24px #1727490b;
+    }
+
+    .learn-icon {
+      width: 43px;
+      height: 43px;
+      display: grid;
+      place-items: center;
+      border-radius: 14px;
+      font-size: 21px;
+      margin-bottom: 16px;
+    }
+
+    .ic-green { background: #edf8df; }
+    .ic-blue { background: #e9efff; }
+    .ic-orange { background: #fff0df; }
+    .ic-purple { background: #f0eaff; }
+    .ic-pink { background: #ffeaf0; }
+    .ic-teal { background: #e1f7f1; }
+
+    .learn-card h3 {
+      font-family: Manrope, sans-serif;
+      font-size: 13px;
+      margin: 0 0 7px;
+      font-weight: 800;
+    }
+
+    .learn-card p {
+      color: var(--muted);
+      font-size: 10px;
+      line-height: 1.7;
+      margin: 0;
+    }
+
+    .lesson-card {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 18px;
+    }
+
+    .lesson-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 17px;
+    }
+
+    .level {
+      display: inline-flex;
+      padding: 6px 9px;
+      border-radius: 8px;
+      background: #eef7e4;
+      color: #47772b;
+      font-size: 10px;
+      font-weight: 800;
+    }
+
+    .lesson-time { color: var(--muted); font-size: 10px; }
+
+    .lesson-card h3 {
+      font-family: Manrope, sans-serif;
+      font-size: 18px;
+      margin: 0 0 8px;
+    }
+
+    .lesson-card > p {
+      font-size: 12px;
+      color: #778198;
+      line-height: 1.8;
+      margin: 0;
+    }
+
+    .example-box {
+      margin-top: 16px;
+      padding: 15px;
+      border-radius: 14px;
+      background: #f5f7fb;
+      border-left: 3px solid #9bdc59;
+    }
+
+    .example-label {
+      color: #738099;
+      font-size: 10px;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    .english-example {
+      font-size: 16px;
+      font-weight: 800;
+      color: #1b2946;
+    }
+
+    .hausa-example {
+      color: #718096;
+      font-size: 12px;
+      margin-top: 7px;
+      line-height: 1.7;
+    }
+
+    .listen-btn {
+      border: 0;
+      background: #e8f5db;
+      color: #416d28;
+      border-radius: 10px;
+      padding: 9px 11px;
+      font-size: 11px;
+      font-weight: 800;
+      margin-top: 12px;
+    }
+
+    .lesson-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-top: 17px;
+    }
+
+    .lesson-footer small { color: var(--muted); font-size: 10px; }
+
+    .dark-btn {
+      border: 0;
+      background: var(--navy);
+      color: white;
+      border-radius: 11px;
+      padding: 11px 14px;
+      font-size: 11px;
+      font-weight: 800;
+    }
+
+    .word-card {
+      background: #eaf5dc;
+      border-radius: 23px;
+      padding: 20px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .word-card::after {
+      content: "Aa";
+      position: absolute;
+      right: 13px;
+      top: 10px;
+      font-family: Manrope, sans-serif;
+      font-size: 70px;
+      font-weight: 800;
+      color: #244c250c;
+    }
+
+    .word-kicker {
+      font-size: 10px;
+      color: #557d3b;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .word-english {
+      font-family: Manrope, sans-serif;
+      font-size: 29px;
+      font-weight: 800;
+      margin-top: 13px;
+      letter-spacing: -1px;
+    }
+
+    .word-meaning { font-size: 13px; margin-top: 5px; color: #58734b; }
+
+    .word-example {
+      font-size: 12px;
+      margin-top: 17px;
+      line-height: 1.8;
+      color: #344e2a;
+    }
+
+    .word-actions { display: flex; flex-wrap: wrap; gap: 9px; margin-top: 16px; }
+
+    .word-actions button {
+      border: 1px solid #d1e5bb;
+      background: #ffffffb8;
+      padding: 10px 12px;
+      border-radius: 11px;
+      font-size: 11px;
+      font-weight: 800;
+      color: #315329;
+    }
+
+    .ai-card {
+      position: relative;
+      overflow: hidden;
+      background: var(--navy);
+      color: white;
+      padding: 22px;
+      border-radius: 23px;
+    }
+
+    .ai-card::after {
+      content: "✳";
+      position: absolute;
+      right: 14px;
+      top: 2px;
+      color: #b8f36b17;
+      font-size: 130px;
+      line-height: 1;
+    }
+
+    .ai-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      color: #c6f39c;
+      background: #ffffff10;
+      padding: 7px 10px;
+      border-radius: 9px;
+      font-size: 10px;
+      font-weight: 800;
+    }
+
+    .ai-card h3 {
+      position: relative;
+      z-index: 1;
+      font-family: Manrope, sans-serif;
+      font-size: 21px;
+      margin: 16px 0 8px;
+    }
+
+    .ai-card > p {
+      position: relative;
+      z-index: 1;
+      color: #c3cce0;
+      font-size: 12px;
+      line-height: 1.8;
+      max-width: 410px;
+      margin: 0;
+    }
+
+    .ai-form {
+      display: flex;
+      position: relative;
+      z-index: 1;
+      gap: 8px;
+      margin-top: 20px;
+    }
+
+    .ai-form input {
+      flex: 1;
+      min-width: 0;
+      background: white;
+      border: 0;
+      border-radius: 12px;
+      padding: 13px;
+      color: var(--text);
+      font-size: 12px;
+    }
+
+    .ai-form button {
+      border: 0;
+      background: var(--green);
+      color: #203020;
+      padding: 0 15px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .ai-result {
+      position: relative;
+      z-index: 1;
+      margin-top: 15px;
+      padding: 13px;
+      background: #ffffff0d;
+      border: 1px solid #ffffff16;
+      border-radius: 13px;
+      color: #e1e7f2;
+      font-size: 12px;
+      line-height: 1.8;
+      white-space: pre-wrap;
+      display: none;
+    }
+
+    .ai-note {
+      position: relative;
+      z-index: 1;
+      color: #9baac3;
+      font-size: 10px;
+      line-height: 1.7;
+      margin-top: 10px;
+    }
+
+    .quiz-card {
+      padding: 20px;
+      border-radius: 22px;
+      background: white;
+      border: 1px solid var(--border);
+    }
+
+    .quiz-number {
+      font-size: 10px;
+      color: #608b3e;
+      font-weight: 800;
+    }
+
+    .quiz-card h3 {
+      font-family: Manrope, sans-serif;
+      font-size: 17px;
+      line-height: 1.5;
+      margin: 11px 0 16px;
+    }
+
+    .quiz-options { display: grid; gap: 9px; }
+
+    .quiz-option {
+      width: 100%;
+      text-align: left;
+      padding: 13px;
+      border: 1px solid var(--border);
+      background: white;
+      border-radius: 12px;
+      color: var(--text);
+      font-size: 12px;
+    }
+
+    .quiz-option.correct {
+      border-color: #79b74f;
+      background: #f0f9e7;
+    }
+
+    .quiz-option.wrong {
+      border-color: #e9a1a1;
+      background: #fff0f0;
+    }
+
+    .quiz-feedback {
+      display: none;
+      font-size: 12px;
+      line-height: 1.7;
+      margin-top: 13px;
+      color: #56793b;
+    }
+
+    .progress-card {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 21px;
+      padding: 18px;
+    }
+
+    .progress-title {
+      font-family: Manrope, sans-serif;
+      font-weight: 800;
+      font-size: 14px;
+    }
+
+    .progress-sub {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 6px;
+      line-height: 1.7;
+    }
+
+    .progress-track {
+      margin-top: 15px;
+      height: 8px;
+      background: #edf0f5;
+      border-radius: 20px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      background: #9bdc59;
+      border-radius: inherit;
+      transition: width .4s;
+    }
+
+    .progress-caption {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      margin-top: 9px;
+      font-size: 10px;
+      color: var(--muted);
+    }
+
+    .footer {
+      text-align: center;
+      padding: 25px 12px 12px;
+      color: #929bad;
+      font-size: 10px;
+      line-height: 1.9;
+    }
+
+    .bottom-nav {
+      position: fixed;
+      z-index: 20;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      gap: 3px;
+      padding: 10px 6px calc(10px + env(safe-area-inset-bottom));
+      background: #ffffffed;
+      backdrop-filter: blur(15px);
+      border-top: 1px solid #e8ebf1;
+    }
+
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      min-width: 0;
+      flex: 1;
+      padding: 5px 1px;
+      border: 0;
+      background: transparent;
+      color: #929bad;
+      font-size: 9px;
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    .nav-item span:first-child { font-size: 19px; }
+    .nav-item.active { color: #4c7d2c; }
+
+    .toast {
+      position: fixed;
+      z-index: 40;
+      bottom: 88px;
+      left: 50%;
+      transform: translate(-50%, 15px);
+      opacity: 0;
+      pointer-events: none;
+      background: #15213e;
+      color: white;
+      padding: 12px 17px;
+      border-radius: 12px;
+      box-shadow: 0 10px 25px #0002;
+      font-size: 12px;
+      transition: .25s;
+      width: max-content;
+      max-width: 90%;
+      text-align: center;
+    }
+
+    .toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+    .search-wrap { display: none; }
+
+    @media (min-width: 650px) {
+      .topbar { padding: 25px 30px 18px; }
+      .content { padding: 12px 30px 45px; }
+      .hero { padding: 32px; min-height: 270px; }
+      .hero h2 { font-size: 31px; }
+      .stats-grid { gap: 15px; }
+      .stat { padding: 18px; }
+      .learning-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 15px; }
+      .learn-card { padding: 19px; min-height: 185px; }
+      .section { margin-top: 38px; }
+      .bottom-nav { display: none; }
+      .toast { bottom: 25px; }
+      .ai-card { padding: 28px; }
+      .lesson-card { padding: 23px; }
+    }
+
+    @media (min-width: 1050px) {
+      .app { display: grid; grid-template-columns: 245px minmax(0, 1fr); }
+      .sidebar {
+        display: flex;
+        flex-direction: column;
+        position: sticky;
+        top: 0;
+        height: 100vh;
+        padding: 26px 17px;
+        background: white;
+        border-right: 1px solid var(--border);
+      }
+      .side-brand { padding: 0 8px 27px; }
+      .side-label {
+        padding: 20px 10px 10px;
+        color: #a0a8b7;
+        font-size: 9px;
+        font-weight: 800;
+        letter-spacing: 1.4px;
+      }
+      .side-link {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 13px 12px;
+        margin: 3px 0;
+        border-radius: 12px;
+        text-decoration: none;
+        color: #78839a;
+        font-size: 12px;
+        font-weight: 700;
+      }
+      .side-link.active, .side-link:hover {
+        background: #eef7e4;
+        color: #416d28;
+      }
+      .side-icon { font-size: 17px; width: 23px; text-align: center; }
+      .side-bottom {
+        margin-top: auto;
+        background: var(--navy);
+        color: white;
+        border-radius: 17px;
+        padding: 17px;
+      }
+      .side-bottom strong { font-size: 13px; }
+      .side-bottom p { font-size: 10px; color: #bac6da; line-height: 1.8; }
+      .side-bottom a { color: var(--green); font-size: 11px; font-weight: 800; text-decoration: none; }
+      .topbar { padding: 24px 38px 18px; }
+      .content { padding: 15px 38px 45px; }
+      .hero { padding: 34px; }
+      .hero-symbol {
+        display: grid;
+        place-items: center;
+        position: absolute;
+        z-index: 1;
+        right: 48px;
+        top: 43px;
+        width: 145px;
+        height: 145px;
+        border-radius: 38px;
+        transform: rotate(10deg);
+        border: 1px solid #ffffff28;
+        background: #ffffff09;
+        color: var(--green);
+        font-size: 74px;
+        font-weight: 800;
+      }
+      .learning-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        scroll-behavior: auto !important;
+        transition-duration: .01ms !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+<div class="app">
+
+  <aside class="sidebar">
+    <div class="brand side-brand">
+      <div class="brand-icon">A</div>
+      <div>
+        <div class="brand-name">AWAJI ENGLISH</div>
+        <div class="brand-sub">Koyo Turanci cikin sauki</div>
+      </div>
+    </div>
+
+    <div class="side-label">BABBAR MENU</div>
+    <a class="side-link active" href="#home"><span class="side-icon">⌂</span>Gida</a>
+    <a class="side-link" href="#learn"><span class="side-icon">▤</span>Koyon Turanci</a>
+    <a class="side-link" href="#notes"><span class="side-icon">▧</span>Littafin Darussa</a>
+    <a class="side-link" href="#listen"><span class="side-icon">♫</span>Sauraro da Karatu</a>
+    <a class="side-link" href="#ai"><span class="side-icon">✳</span>Malamin AI</a>
+    <a class="side-link" href="#quiz"><span class="side-icon">☷</span>Gwajin Ilimi</a>
+    <a class="side-link" href="#progress"><span class="side-icon">◴</span>Ci gaban Koyo</a>
+
+    <div class="side-bottom">
+      <strong>🌱 Ci gaba da Koyo!</strong>
+      <p>Ɗan lokaci a kowace rana zai taimaka maka ka inganta Turancinka.</p>
+      <a href="#learn">Fara koyo →</a>
+    </div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-icon">A</div>
+        <div>
+          <div class="brand-name">Awaji English Academy</div>
+          <div class="brand-sub">Turanci ta hanyar Hausa</div>
+        </div>
+      </div>
+      <div class="top-actions">
+        <button class="icon-btn" id="searchBtn" aria-label="Nemo darasi" title="Nemo darasi">⌕</button>
+        <div class="avatar" title="Mai koyo">A</div>
+      </div>
+    </header>
+
+    <div class="content" id="home">
+      <div class="eyebrow">MARABA DA ZUWA 👋</div>
+      <h1 class="welcome">Koyi Turanci,<br><span>ka buɗe sabbin damammaki.</span></h1>
+      <p class="welcome-sub">Koyi karatu, rubutu da magana da Turanci ta hanyar Hausa mai sauƙin fahimta.</p>
+
+      <div class="search-wrap" id="searchWrap">
+        <input id="searchInput" type="search" placeholder="Nemo darasi ko kalma..." aria-label="Nemo darasi ko kalma">
+      </div>
+
+      <section class="hero">
+        <div class="hero-content">
+          <div class="hero-tag">✦ SHIRINKA NA KOYON TURANCI</div>
+          <h2>Turancinka zai inganta, mataki-mataki.</h2>
+          <p>Fara daga sauƙaƙan kalmomi zuwa jimloli da tattaunawa. Za mu koya tare!</p>
+          <a class="primary-btn" href="#learn">Fara Koyo <span>→</span></a>
+        </div>
+        <div class="hero-symbol" aria-hidden="true">Aa</div>
+      </section>
+
+      <div class="stats-grid" id="progress">
+        <div class="stat">
+          <div class="stat-icon">📚</div>
+          <div class="stat-number" id="lessonsStat">01</div>
+          <div class="stat-label">Darasin yau</div>
+        </div>
+        <div class="stat">
+          <div class="stat-icon">🔥</div>
+          <div class="stat-number" id="streakStat">0</div>
+          <div class="stat-label">Kwanakin koyo</div>
+        </div>
+        <div class="stat">
+          <div class="stat-icon">✓</div>
+          <div class="stat-number" id="scoreStat">0%</div>
+          <div class="stat-label">Makin gwaji</div>
+        </div>
+      </div>
+
+      <section class="section" id="learn">
+        <div class="section-heading">
+          <div>
+            <h2>Me kake son koya?</h2>
+            <p>Zaɓi hanyar koyon da ta fi maka sauƙi.</p>
+          </div>
+        </div>
+
+        <div class="learning-grid">
+          <button class="learn-card" data-target="notes">
+            <div class="learn-icon ic-green">📖</div>
+            <h3>Littafin Darussa</h3>
+            <p>Karanta darussan Turanci tare da bayanin Hausa.</p>
+          </button>
+
+          <button class="learn-card" data-target="listen">
+            <div class="learn-icon ic-blue">🔊</div>
+            <h3>Sauraro da Karatu</h3>
+            <p>Saurari kalmomi da jimloli domin koyon furuci.</p>
+          </button>
+
+          <button class="learn-card" data-target="ai">
+            <div class="learn-icon ic-purple">🤖</div>
+            <h3>Malamin AI</h3>
+            <p>Tambayi AI game da Turanci da Hausa.</p>
+          </button>
+
+          <button class="learn-card" data-target="quiz">
+            <div class="learn-icon ic-orange">✍️</div>
+            <h3>Gwajin Ilimi</h3>
+            <p>Gwada fahimtarka ta hanyar tambayoyi.</p>
+          </button>
+
+          <button class="learn-card" data-target="word">
+            <div class="learn-icon ic-pink">💡</div>
+            <h3>Kalmar Yau</h3>
+            <p>Koyi sabuwar kalma tare da ma'anarta da misali.</p>
+          </button>
+
+          <button class="learn-card" data-target="progress">
+            <div class="learn-icon ic-teal">📈</div>
+            <h3>Ci gaban Koyo</h3>
+            <p>Duba yadda kake samun ci gaba a darussanka.</p>
+          </button>
+        </div>
+      </section>
+
+      <section class="section" id="notes">
+        <div class="section-heading">
+          <div>
+            <h2>Darasin farko</h2>
+            <p>Ka fara da muhimman jimlolin yau da kullum.</p>
+          </div>
+          <span class="level">MATAKIN FARKO</span>
+        </div>
+
+        <div class="lesson-card">
+          <div class="lesson-top">
+            <span class="level">DARASI 01</span>
+            <span class="lesson-time">⏱ Minti 5</span>
+          </div>
+          <h3>Gaisuwa a Turanci (Greetings)</h3>
+          <p>Za mu koyi yadda ake gaishe da mutane a Turanci da kuma yadda ake amsawa.</p>
+
+          <div class="example-box">
+            <div class="example-label">JIMLAR TURANCI</div>
+            <div class="english-example">Good morning!</div>
+            <div class="hausa-example">Hausa: Ina kwana!</div>
+            <button class="listen-btn" data-speak="Good morning!">🔊 Saurari Turanci</button>
+          </div>
+
+          <div class="example-box">
+            <div class="example-label">WANI MISALI</div>
+            <div class="english-example">How are you?</div>
+            <div class="hausa-example">Hausa: Yaya kake? / Yaya kike?</div>
+            <button class="listen-btn" data-speak="How are you?">🔊 Saurari Turanci</button>
+          </div>
+
+          <div class="lesson-footer">
+            <small>Darasi na farko daga jerin darussa.</small>
+            <button class="dark-btn" id="completeLesson">Na Kammala ✓</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="listen">
+        <div class="section-heading">
+          <div>
+            <h2>Kalmar yau</h2>
+            <p>Ƙara sabuwar kalma a cikin ƙamus ɗinka.</p>
+          </div>
+          <span class="level">KALMA 01</span>
+        </div>
+
+        <div class="word-card" id="word">
+          <div class="word-kicker">ENGLISH WORD OF THE DAY</div>
+          <div class="word-english" id="wordEnglish">Beautiful</div>
+          <div class="word-meaning" id="wordMeaning">Hausa: Mai kyau / Kyakkyawa</div>
+          <div class="word-example">
+            <strong>Misali:</strong><br>
+            This is a beautiful house.<br>
+            <span>Wannan gida ne mai kyau.</span>
+          </div>
+          <div class="word-actions">
+            <button data-speak="Beautiful">🔊 Saurari kalma</button>
+            <button id="nextWord">↻ Sabuwar kalma</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="ai">
+        <div class="section-heading">
+          <div>
+            <h2>Malamin AI</h2>
+            <p>Mataimakinka na koyon Turanci.</p>
+          </div>
+        </div>
+
+        <div class="ai-card">
+          <div class="ai-badge">✦ MATAIMAKIN KOYO</div>
+          <h3>Tambayi malamin Turanci.</h3>
+          <p>Rubuta kalma, jimla ko tambaya. Za mu shirya wannan sashe domin AI ya iya taimaka maka da bayanin Hausa.</p>
+
+          <form class="ai-form" id="aiForm">
+            <input id="aiQuestion" type="text" placeholder="Misali: Menene past tense?" aria-label="Tambayarka" required maxlength="500">
+            <button type="submit">Tambaya ↑</button>
+          </form>
+
+          <div class="ai-result" id="aiResult" role="status" aria-live="polite"></div>
+          <div class="ai-note">Wannan sigar farko tana nuna misalin amsa. Za mu haɗa AI na gaske ta hanyar backend mai tsaro a mataki na gaba.</div>
+        </div>
+      </section>
+
+      <section class="section" id="quiz">
+        <div class="section-heading">
+          <div>
+            <h2>Gwada kanka</h2>
+            <p>Ka zaɓi amsar da ta dace.</p>
+          </div>
+          <span class="level">TAMBAYA 01</span>
+        </div>
+
+        <div class="quiz-card">
+          <div class="quiz-number">TAMBAYA TA 1</div>
+          <h3>Menene ma'anar “Thank you” a Hausa?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" data-correct="false">A. Ina kwana?</button>
+            <button class="quiz-option" data-correct="true">B. Na gode.</button>
+            <button class="quiz-option" data-correct="false">C. Sai anjima.</button>
+            <button class="quiz-option" data-correct="false">D. Barka da zuwa.</button>
+          </div>
+          <div class="quiz-feedback" id="quizFeedback" role="status" aria-live="polite"></div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-heading">
+          <div>
+            <h2>Ci gabanka</h2>
+            <p>Za a sabunta wannan bayanan yayin da kake koyo.</p>
+          </div>
+        </div>
+
+        <div class="progress-card">
+          <div class="progress-title">Ci gaban darussa</div>
+          <div class="progress-sub">Kammala darussa da gwaje-gwaje domin ganin ci gabanka.</div>
+          <div class="progress-track">
+            <div class="progress-fill" id="progressFill"></div>
+          </div>
+          <div class="progress-caption">
+            <span id="progressLabel">Ba a kammala darasi ba tukuna.</span>
+            <strong id="progressPercent">0%</strong>
+          </div>
+        </div>
+      </section>
+
+      <footer class="footer">
+        <strong>Awaji English Academy</strong><br>
+        Koyi Turanci cikin sauƙi, ta hanyar Hausa.<br>
+        © <span id="year"></span> Awaji English Academy
+      </footer>
+    </div>
+  </main>
+</div>
+
+<nav class="bottom-nav" aria-label="Babbar menu">
+  <a class="nav-item active" href="#home"><span>⌂</span><span>Gida</span></a>
+  <a class="nav-item" href="#learn"><span>▤</span><span>Koyo</span></a>
+  <a class="nav-item" href="#listen"><span>♫</span><span>Sauraro</span></a>
+  <a class="nav-item" href="#ai"><span>✳</span><span>Malamin AI</span></a>
+  <a class="nav-item" href="#quiz"><span>☷</span><span>Gwaji</span></a>
+</nav>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(() => {
+  "use strict";
+
+  const $ = (selector) => document.querySelector(selector);
+  const $$ = (selector) => document.querySelectorAll(selector);
+
+  const toast = $("#toast");
+  let toastTimer;
+
+  function showToast(message) {
+    toast.textContent = message;
+    toast.classList.add("show");
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toast.classList.remove("show"), 2600);
+  }
+
+  $("#year").textContent = new Date().getFullYear();
+
+  // Save basic learning progress on this device.
+  const storageKey = "awajiEnglishAcademyProgressV1";
+
+  function loadProgress() {
+    try {
+      return JSON.parse(localStorage.getItem(storageKey)) || {
+        completed: false,
+        correct: 0,
+        answered: false,
+        streak: 0,
+        lastVisit: ""
+      };
+    } catch {
+      return {
+        completed: false,
+        correct: 0,
+        answered: false,
+        streak: 0,
+        lastVisit: ""
+      };
+    }
+  }
+
+  let progress = loadProgress();
+
+  function saveProgress() {
+    try {
+      localStorage.setItem(storageKey, JSON.stringify(progress));
+    } catch {
+      // The app remains usable if browser storage is unavailable.
+    }
+    renderProgress();
+  }
+
+  function renderProgress() {
+    $("#lessonsStat").textContent = progress.completed ? "01 ✓" : "01";
+    $("#streakStat").textContent = String(progress.streak || 0);
+    $("#scoreStat").textContent = progress.answered
+      ? (progress.correct ? "100%" : "0%")
+      : "—";
+
+    const percent = (progress.completed ? 50 : 0) +
+                    (progress.answered ? 50 : 0);
+
+    $("#progressFill").style.width = percent + "%";
+    $("#progressPercent").textContent = percent + "%";
+    $("#progressLabel").textContent = percent === 100
+      ? "An kammala ayyukan farko!"
+      : percent === 50
+        ? "Kashi ɗaya daga cikin ayyukan farko ya kammala."
+        : "Fara darasi da gwaji domin samun ci gaba.";
+  }
+
+  // Keep streaks based on consecutive calendar days.
+  function updateStreak() {
+    const today = new Date().toLocaleDateString("en-CA");
+    const previous = progress.lastVisit;
+
+    if (previous !== today) {
+      if (previous) {
+        const a = new Date(previous + "T12:00:00");
+        const b = new Date(today + "T12:00:00");
+        const difference = Math.round((b - a) / 86400000);
+
+        progress.streak = difference === 1
+          ? (progress.streak || 0) + 1
+          : 1;
+      } else {
+        progress.streak = 1;
+      }
+
+      progress.lastVisit = today;
+      saveProgress();
+    }
+  }
+
+  updateStreak();
+  renderProgress();
+
+  // Text-to-speech: use the voices available on the learner's device.
+  function speak(text, language = "en-US") {
+    if (!("speechSynthesis" in window)) {
+      showToast("Wayar ba ta goyi bayan karanta rubutu da murya a wannan burauzar.");
+      return;
+    }
+
+    window.speechSynthesis.cancel();
+
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = language;
+    utterance.rate = 0.82;
+
+    const voices = window.speechSynthesis.getVoices();
+    const matchingVoice = voices.find(v =>
+      v.lang.toLowerCase().startsWith(language.toLowerCase())
+    );
+
+    if (matchingVoice) utterance.voice = matchingVoice;
+
+    utterance.onerror = () => showToast("An samu matsala wajen kunna sauti.");
+    window.speechSynthesis.speak(utterance);
+  }
+
+  $$("[data-speak]").forEach(button => {
+    button.addEventListener("click", () => {
+      speak(button.dataset.speak, "en-US");
+    });
+  });
+
+  // Mark the introductory lesson as completed.
+  $("#completeLesson").addEventListener("click", () => {
+    if (!progress.completed) {
+      progress.completed = true;
+      saveProgress();
+      showToast("Madalla! Ka kammala darasin farko. 🎉");
+    } else {
+      showToast("Ka riga ka kammala wannan darasi.");
+    }
+  });
+
+  // Daily vocabulary demonstration.
+  const words = [
+    {
+      english: "Beautiful",
+      meaning: "Mai kyau / Kyakkyawa",
+      example: "This is a beautiful house.",
+      translation: "Wannan gida ne mai kyau."
+    },
+    {
+      english: "Courage",
+      meaning: "Jarumtaka / Ƙarfin hali",
+      example: "She has great courage.",
+      translation: "Tana da ƙarfin hali sosai."
+    },
+    {
+      english: "Knowledge",
+      meaning: "Ilimi",
+      example: "Knowledge is important.",
+      translation: "Ilimi yana da muhimmanci."
+    },
+    {
+      english: "Improve",
+      meaning: "Ingantawa / Kyautatawa",
+      example: "I want to improve my English.",
+      translation: "Ina son inganta Turancina."
+    },
+    {
+      english: "Opportunity",
+      meaning: "Dama",
+      example: "This is a good opportunity.",
+      translation: "Wannan dama ce mai kyau."
+    }
+  ];
+
+  let wordIndex = 0;
+
+  $("#nextWord").addEventListener("click", () => {
+    wordIndex = (wordIndex + 1) % words.length;
+    const word = words[wordIndex];
+
+    $("#wordEnglish").textContent = word.english;
+    $("#wordMeaning").textContent = "Hausa: " + word.meaning;
+
+    $(".word-example").innerHTML =
+      "<strong>Misali:</strong><br>" +
+      word.example.replace(/&/g, "&amp;").replace(/</g, "&lt;") +
+      "<br><span>" +
+      word.translation.replace(/&/g, "&amp;").replace(/</g, "&lt;") +
+      "</span>";
+
+    const speakButton = document.querySelector(".word-actions [data-speak]");
+    speakButton.dataset.speak = word.english;
+
+    showToast("An nuna sabuwar kalma.");
+  });
+
+  // Simple starter quiz.
+  $$(".quiz-option").forEach(button => {
+    button.addEventListener("click", () => {
+      if (progress.answered) {
+        showToast("Ka riga ka amsa wannan tambayar.");
+        return;
+      }
+
+      progress.answered = true;
+      progress.correct = button.dataset.correct === "true" ? 1 : 0;
+
+      $$(".quiz-option").forEach(option => {
+        option.disabled = true;
+        if (option.dataset.correct === "true") {
+          option.classList.add("correct");
+        }
+      });
+
+      if (!progress.correct) button.classList.add("wrong");
+
+      const feedback = $("#quizFeedback");
+      feedback.style.display = "block";
+      feedback.textContent = progress.correct
+        ? "Madalla! “Thank you” na nufin “Na gode” a Hausa. 🎉"
+        : "Ba haka ba. Amsar da ta dace ita ce “B. Na gode.”";
+
+      saveProgress();
+    });
+  });
+
+  // Demonstration only: real AI will be connected through a secure backend.
+  $("#aiForm").addEventListener("submit", event => {
+    event.preventDefault();
+
+    const question = $("#aiQuestion").value.trim();
+    if (!question) return;
+
+    const result = $("#aiResult");
+    result.style.display = "block";
+
+    const normalized = question.toLowerCase();
+
+    if (normalized.includes("past tense")) {
+      result.textContent =
+        "PAST TENSE — LOKACIN DA YA WUCE\n\n" +
+        "A Turanci, ana amfani da past tense wajen bayyana abin da ya faru a baya.\n\n" +
+        "Misali:\n" +
+        "I played football yesterday.\n" +
+        "Hausa: Na buga ƙwallo jiya.\n\n" +
+        "Wasu fi'ilai suna canzawa: go → went, eat → ate, see → saw.";
+    } else if (normalized.includes("hello") || normalized.includes("sannu")) {
+      result.textContent =
+        "HELLO = SANNU\n\n" +
+        "Ana amfani da “Hello” wajen gaishe da mutum.\n\n" +
+        "Misali: Hello, my friend.\n" +
+        "Hausa: Sannu, abokina.";
+    } else {
+      result.textContent =
+        "Mun karɓi tambayarka: “" + question + "”\n\n" +
+        "Wannan sigar farko ce, don haka amsoshinta sun takaita. " +
+        "A mataki na gaba za mu haɗa AI na gaske domin ya iya fahimtar tambayoyi da amsa su cikin Hausa da Turanci.";
+    }
+
+    showToast("An shirya amsar misali.");
+  });
+
+  // Search the available sections and learning cards.
+  $("#searchBtn").addEventListener("click", () => {
+    const wrap = $("#searchWrap");
+    wrap.style.display = wrap.style.display === "block" ? "none" : "block";
+
+    if (wrap.style.display === "block") {
+      $("#searchInput").focus();
+      wrap.style.marginTop = "14px";
+      wrap.style.marginBottom = "8px";
+      wrap.style.padding = "12px";
+      wrap.style.background = "#ffffff";
+      wrap.style.border = "1px solid #e9edf4";
+      wrap.style.borderRadius = "14px";
+      $("#searchInput").style.width = "100%";
+      $("#searchInput").style.padding = "10px";
+      $("#searchInput").style.border = "1px solid #e9edf4";
+      $("#searchInput").style.borderRadius = "9px";
+    }
+  });
+
+  $("#searchInput").addEventListener("input", event => {
+    const term = event.target.value.trim().toLowerCase();
+    let matches = 0;
+
+    $$(".learn-card").forEach(card => {
+      const visible = card.textContent.toLowerCase().includes(term);
+      card.style.display = visible ? "" : "none";
+      if (visible) matches++;
+    });
+
+    if (term && matches === 0) {
+      showToast("Ba a sami wannan kalma a katunan koyo ba.");
+    }
+  });
+
+  // Navigation cards.
+  $$("[data-target]").forEach(card => {
+    card.addEventListener("click", () => {
+      const target = document.getElementById(card.dataset.target);
+      if (target) {
+        target.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    });
+  });
+
+  // Highlight the current mobile navigation destination.
+  $$(".bottom-nav .nav-item").forEach(link => {
+    link.addEventListener("click", () => {
+      $$(".bottom-nav .nav-item").forEach(item => item.classList.remove("active"));
+      link.classList.add("active");
+    });
+  });
+
+})();
+</script>
+</body>
+</html>
