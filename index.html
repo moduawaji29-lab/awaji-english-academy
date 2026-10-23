@@ -123,6 +123,20 @@ body{background:#041126;color:#f5f8ff}
 .category-page-inner button{cursor:pointer}
 @media(max-width:480px){.category-page-top{align-items:flex-start;gap:11px;padding:14px 12px}.category-page-top .dark-btn{padding:11px 12px;font-size:12px}.category-page-intro{font-size:12px}.category-page-inner{padding:18px 13px 45px}}
 
+
+/* Conversational AI assistant */
+.ai-chat-shell{display:flex;flex-direction:column;gap:12px;margin-top:14px}
+.ai-chat-toolbar{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.ai-chat-toolbar .chat-status{font-size:.88rem;color:var(--muted,#64748b)}
+.ai-chat-messages{display:flex;flex-direction:column;gap:12px;max-height:52vh;min-height:180px;overflow-y:auto;padding:14px;background:#f8fafc;border:1px solid var(--border,#dbe2ea);border-radius:16px}
+.ai-chat-message{max-width:92%;padding:12px 14px;border-radius:14px;line-height:1.65;white-space:normal;overflow-wrap:anywhere}
+.ai-chat-message.user{align-self:flex-end;background:#17243b;color:white;border-bottom-right-radius:4px}
+.ai-chat-message.assistant{align-self:flex-start;background:#fff;color:#243247;border:1px solid #e2e8f0;border-bottom-left-radius:4px}
+.ai-chat-message p{margin:0 0 9px}.ai-chat-message p:last-child{margin-bottom:0}.ai-chat-message ul{padding-left:22px;margin:6px 0}
+.ai-chat-form{display:flex;flex-direction:column;gap:10px}.ai-chat-form textarea{width:100%;min-height:78px;resize:vertical;padding:13px;border:1px solid var(--border,#cbd5e1);border-radius:12px;font:inherit;background:#fff;color:#17243b}
+.ai-chat-actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.ai-chat-actions button{min-height:44px}.ai-chat-note{font-size:.88rem;color:var(--muted,#64748b);margin:0}
+.ai-chat-message .listen-btn{margin-top:10px}
+@media(max-width:520px){.ai-chat-message{max-width:98%}.ai-chat-messages{max-height:55vh;padding:10px}}
 </style>
 <style id="full-page-learning-fix">
 /* Learning sections behave like full pages, not small popup cards. */
@@ -253,7 +267,10 @@ function pronunciation(){const drills=[
 ['Plural endings','cats — dogs — buses','The plural ending can sound like s, z, or iz depending on the final sound.'],
 ['Clear endings','want — wants — wanted','Do not swallow the final consonants; they can change the meaning.']
 ];let d=drills[ri%drills.length];open('Pronunciation & Speaking',`Practice ${ri+1} of ${drills.length}. Read the tip, then practise aloud. Listen buttons use ElevenLabs audio files when supplied.`,box(d[0],`<p><b>Practice:</b> ${d[1]}</p><p>${d[2]}</p>`,btn('🔊 Listen to practice',`data-speak="${d[1].replaceAll('"','&quot;')}"`))+`<div style="display:flex;justify-content:space-between">${btn('← Previous','data-step="pprev"')}${btn('Next practice →','data-step="pnext"')}</div><p class="dialog-intro">Tip: listen, repeat three times, record yourself if possible, and compare your clarity—not just your speed.</p>`)}
-function ai(){open('AI Tutor','Live AI tutor with English explanations and Hausa support.',`<form id="tutorForm"><label><b>Ask an English question</b></label><textarea id="tutorQuestion" rows="3" placeholder="Example: Explain the past tense in simple English and Hausa" style="width:100%;padding:12px;border:1px solid var(--border);border-radius:10px;margin:10px 0"></textarea><button class="dark-btn" id="tutorSubmit">Explain this</button></form><div id="tutorResult" class="example-box" style="display:none;white-space:pre-wrap"></div><p class="dialog-intro">Ask about grammar, vocabulary, pronunciation, writing or everyday conversation. You can ask for Hausa explanations.</p>`)}
+let aiChatHistory=[];
+function ai(){open('Awaji AI Assistant','Chat naturally, ask follow-up questions, and get help in English or Hausa.',`<div class="ai-chat-shell"><div class="ai-chat-toolbar"><span class="chat-status">● Gemini AI assistant · English & Hausa</span><button type="button" class="secondary-btn" id="newAiChat">＋ New chat</button></div><div id="aiChatMessages" class="ai-chat-messages" role="log" aria-live="polite"></div><form id="tutorForm" class="ai-chat-form"><label for="tutorQuestion"><b>Message Awaji AI</b></label><textarea id="tutorQuestion" rows="3" maxlength="2000" placeholder="Ask anything, or say: Explain it in Hausa…" required></textarea><div class="ai-chat-actions"><button class="dark-btn" id="tutorSubmit" type="submit">Send message ➤</button></div><p class="ai-chat-note">Awaji AI can help with English, Hausa explanations, writing, vocabulary and general questions. It uses the current chat to understand follow-ups.</p></form></div>`);renderAiChat();$('#newAiChat').onclick=()=>{aiChatHistory=[];renderAiChat();$('#tutorQuestion').focus()};$('#tutorQuestion').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();$('#tutorForm').requestSubmit()}})}
+function renderAiChat(){const box=$('#aiChatMessages');if(!box)return;box.innerHTML='';if(!aiChatHistory.length){const welcome=document.createElement('div');welcome.className='ai-chat-message assistant';welcome.textContent='Hello! I’m Awaji AI, your conversational assistant. Ask me a question, or continue naturally with follow-up questions. I can also explain things in Hausa.';box.appendChild(welcome);return}for(const item of aiChatHistory){const bubble=document.createElement('div');bubble.className='ai-chat-message '+(item.role==='user'?'user':'assistant');bubble.textContent=item.text;box.appendChild(bubble)}box.scrollTop=box.scrollHeight}
+function appendAiMessage(role,text){aiChatHistory.push({role,text});renderAiChat()}
 function videos(){let d=$('#videoLessons');d.showModal?d.showModal():d.setAttribute('open','')}
 // Expanded curriculum: more than a quick demo, organised into a progressive study path.
 const extraLessonTopics = [
@@ -375,22 +392,20 @@ body.addEventListener('click',e=>{let b=e.target.closest('button');if(!b)return;
 body.addEventListener('submit',async e=>{
 if(e.target.id!=='tutorForm')return;
 e.preventDefault();
-const question=$('#tutorQuestion').value.trim();
-if(!question)return;
-const result=$('#tutorResult');
-const button=$('#tutorSubmit');
-result.style.display='block';result.textContent='Thinking…';button.disabled=true;button.textContent='Thinking…';
+const input=$('#tutorQuestion');const question=input.value.trim();if(!question)return;
+const button=$('#tutorSubmit');const sendText=button.textContent;
+appendAiMessage('user',question);input.value='';button.disabled=true;button.textContent='Thinking…';
+const pending=document.createElement('div');pending.className='ai-chat-message assistant';pending.textContent='Thinking…';$('#aiChatMessages').appendChild(pending);$('#aiChatMessages').scrollTop=$('#aiChatMessages').scrollHeight;
 try{
-const response=await fetch('/api/tutor',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({question})});
+const history=aiChatHistory.slice(0,-1).slice(-12).map(m=>({role:m.role,text:m.text}));
+const response=await fetch('/api/tutor',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({question,history})});
 const data=await response.json();
-if(!response.ok)throw new Error(data.error||'AI tutor could not answer.');
-const answer=String(data.answer||'').trim();
-if(!answer)throw new Error('The AI returned an empty answer.');
-result.textContent=answer;
-const listen=document.createElement('button');listen.type='button';listen.className='listen-btn';listen.textContent='🔊 Listen';listen.dataset.speak=answer;
-result.appendChild(document.createElement('br'));result.appendChild(listen);
-}catch(error){result.textContent='Sorry, the AI tutor could not respond. '+(error.message||'Please try again.');}
-finally{button.disabled=false;button.textContent='Explain this';}
+if(!response.ok)throw new Error(data.error||'The AI assistant could not answer.');
+const answer=String(data.answer||'').trim();if(!answer)throw new Error('The AI returned an empty answer.');
+pending.remove();appendAiMessage('assistant',answer);
+const bubble=$('#aiChatMessages').lastElementChild;const listen=document.createElement('button');listen.type='button';listen.className='listen-btn';listen.textContent='🔊 Listen';listen.dataset.speak=answer;bubble.appendChild(document.createElement('br'));bubble.appendChild(listen);
+}catch(error){pending.textContent='Sorry, I could not respond. '+(error.message||'Please try again.');}
+finally{button.disabled=false;button.textContent=sendText;input.focus();}
 });
 $('#searchBtn')?.addEventListener('click',()=>{let w=$('#searchWrap');w.style.display=w.style.display==='block'?'none':'block';if(w.style.display==='block')$('#searchInput').focus()});$('#searchInput')?.addEventListener('input',e=>{let t=e.target.value.toLowerCase();$$('.learn-card').forEach(c=>c.style.display=c.textContent.toLowerCase().includes(t)?'':'none')});
 $('#libraryDialog')?.remove();$('#lessonDialog')?.remove();$$('.bottom-nav .nav-item').forEach(a=>a.addEventListener('click',()=>{$$('.bottom-nav .nav-item').forEach(x=>x.classList.remove('active'));a.classList.add('active')}));
@@ -476,4 +491,5 @@ document.getElementById('academyBack').addEventListener('click',closePage);windo
 })();
 </script>
 
-</body></html>
+<
+Preview truncated for large file
