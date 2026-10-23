@@ -1,9 +1,10 @@
 // api/tutor.js
-// Awaji English Academy — conversational AI tutor with a bounded Gemini request.
-// Replace the existing api/tutor.js file with this complete file.
+// Awaji English Academy — conversational Gemini assistant with fallback.
+// Replace the existing api/tutor.js with this complete file.
 
-const MODEL = "gemini-3.8-flash";
-const REQUEST_TIMEOUT_MS = 25000;
+const PRIMARY_MODEL = "gemini-3.8-flash";
+const FALLBACK_MODEL = "gemini-3.5-flash-lite";
+const PER_MODEL_TIMEOUT_MS = 10000;
 const MAX_HISTORY_MESSAGES = 12;
 const MAX_MESSAGE_CHARS = 6000;
 
@@ -22,16 +23,15 @@ function normalizeHistory(history) {
     const text = item.text.trim().slice(0, MAX_MESSAGE_CHARS);
     if (!text) continue;
 
-    const role = item.role === "assistant" || item.role === "model"
-      ? "model"
-      : item.role === "user"
-        ? "user"
-        : null;
+    const role =
+      item.role === "assistant" || item.role === "model"
+        ? "model"
+        : item.role === "user"
+          ? "user"
+          : null;
 
     if (!role) continue;
 
-    // Gemini expects alternating user/model turns. Merge adjacent turns
-    // with the same role instead of sending an invalid conversation.
     const last = messages[messages.length - 1];
     if (last && last.role === role) {
       last.parts[0].text += "\n\n" + text;
@@ -40,12 +40,80 @@ function normalizeHistory(history) {
     }
   }
 
-  // A Gemini conversation should begin with a user message.
+  // Gemini conversations must begin with a user turn.
   while (messages.length && messages[0].role !== "user") {
     messages.shift();
   }
 
   return messages;
+}
+
+async function callGemini(model, apiKey, body) {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), PER_MODEL_TIMEOUT_MS);
+
+  try {
+    const response = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${encodeURIComponent(apiKey)}`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+        signal: controller.signal
+      }
+    );
+
+    const raw = await response.text();
+    let data = {};
+    try {
+      data = raw ? JSON.parse(raw) : {};
+    } catch {
+      return {
+        ok: false,
+        status: response.status,
+        message: "Gemini returned a response that was not valid JSON."
+      };
+    }
+
+    if (!response.ok) {
+      return {
+        ok: false,
+        status: response.status,
+        message: data?.error?.message || "Unknown Gemini API error."
+      };
+    }
+
+    const answer = data?.candidates?.[0]?.content?.parts
+      ?.map(part => typeof part.text === "string" ? part.text : "")
+      .join("")
+      .trim();
+
+    if (!answer) {
+      return {
+        ok: false,
+        status: 502,
+        message: `Gemini returned no answer. Finish reason: ${data?.candidates?.[0]?.finishReason || "not provided"}.`
+      };
+    }
+
+    return { ok: true, answer };
+  } catch (error) {
+    if (error?.name === "AbortError") {
+      return {
+        ok: false,
+        status: 504,
+        message: `${model} timed out after ${PER_MODEL_TIMEOUT_MS} ms.`
+      };
+    }
+
+    return {
+      ok: false,
+      status: 502,
+      message: error?.message || "Network request to Gemini failed."
+    };
+  } finally {
+    clearTimeout(timer);
+  }
 }
 
 module.exports = async function handler(req, res) {
@@ -70,18 +138,16 @@ module.exports = async function handler(req, res) {
     return sendJson(res, 400, { error: "Please type a question first." });
   }
 
-  const history = normalizeHistory(req.body?.history);
-  const lastMessage = history[history.length - 1];
+  const contents = normalizeHistory(req.body?.history);
+  const lastMessage = contents[contents.length - 1];
 
+  // The frontend sends the earlier conversation as history and the latest
+  // message separately as "question".
   if (lastMessage && lastMessage.role === "user") {
     lastMessage.parts[0].text += "\n\nCurrent message: " + question;
   } else {
-    history.push({ role: "user", parts: [{ text: question }] });
+    contents.push({ role: "user", parts: [{ text: question }] });
   }
-
-  const contents = history.length
-    ? history
-    : [{ role: "user", parts: [{ text: question }] }];
 
   const systemInstruction = {
     parts: [{
@@ -96,81 +162,62 @@ module.exports = async function handler(req, res) {
     }]
   };
 
-  const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
+  const requestBody = {
+    systemInstruction,
+    contents,
+    generationConfig: {
+      temperature: 0.7,
+      maxOutputTokens: 800
+    }
+  };
 
-  try {
-    const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent?key=${encodeURIComponent(apiKey)}`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          systemInstruction,
-          contents,
-          generationConfig: {
-            temperature: 0.7,
-            maxOutputTokens: 1200
-          }
-        }),
-        signal: controller.signal
-      }
+  // Try the primary model first, then fall back for temporary availability,
+  // rate-limit, timeout, or server errors. Total worst-case time is about 20s.
+  const primary = await callGemini(PRIMARY_MODEL, apiKey, requestBody);
+  if (primary.ok) {
+    return sendJson(res, 200, { answer: primary.answer, model: PRIMARY_MODEL });
+  }
+
+  console.error(
+    `Gemini primary model ${PRIMARY_MODEL} failed:`,
+    primary.status,
+    primary.message
+  );
+
+  const shouldFallback =
+    primary.status === 429 ||
+    primary.status === 503 ||
+    primary.status === 504 ||
+    primary.status >= 500;
+
+  if (shouldFallback) {
+    const fallback = await callGemini(FALLBACK_MODEL, apiKey, requestBody);
+    if (fallback.ok) {
+      console.log(`AI tutor answered using fallback model ${FALLBACK_MODEL}.`);
+      return sendJson(res, 200, { answer: fallback.answer, model: FALLBACK_MODEL });
+    }
+
+    console.error(
+      `Gemini fallback model ${FALLBACK_MODEL} failed:`,
+      fallback.status,
+      fallback.message
     );
 
-    const rawText = await response.text();
-    let data;
-    try {
-      data = rawText ? JSON.parse(rawText) : {};
-    } catch {
-      console.error("Gemini returned non-JSON output. HTTP status:", response.status);
-      return sendJson(res, 502, {
-        error: "The AI service returned an unexpected response. Please try again."
-      });
-    }
-
-    if (!response.ok) {
-      // Log only status and provider message; never log the API key or full URL.
-      const providerMessage = data?.error?.message || "Unknown Gemini API error";
-      console.error("Gemini API error:", response.status, providerMessage);
-
-      if (response.status === 429) {
-        return sendJson(res, 429, {
-          error: "The AI assistant is busy right now. Please wait a little and try again."
-        });
-      }
-
-      return sendJson(res, 502, {
-        error: "The AI service could not answer this message right now. Please try again."
-      });
-    }
-
-    const answer = data?.candidates?.[0]?.content?.parts
-      ?.map(part => typeof part.text === "string" ? part.text : "")
-      .join("")
-      .trim();
-
-    if (!answer) {
-      const reason = data?.candidates?.[0]?.finishReason;
-      console.error("Gemini returned no answer. Finish reason:", reason || "not provided");
-      return sendJson(res, 502, {
-        error: "I couldn't form an answer to that message. Please rephrase it and try again."
-      });
-    }
-
-    return sendJson(res, 200, { answer });
-  } catch (error) {
-    if (error?.name === "AbortError") {
-      console.error("Gemini request timed out after", REQUEST_TIMEOUT_MS, "ms.");
-      return sendJson(res, 504, {
-        error: "The AI service took too long to respond. Please try again in a moment."
-      });
-    }
-
-    console.error("AI tutor request failed:", error?.message || "Unknown error");
-    return sendJson(res, 502, {
-      error: "I couldn't connect to the AI service. Please check your connection and try again."
+    return sendJson(res, 503, {
+      error:
+        "The AI service is temporarily busy. Please wait a moment and try again. " +
+        "If this keeps happening, the available models may be temporarily overloaded."
     });
-  } finally {
-    clearTimeout(timeout);
   }
+
+  if (primary.status === 400 || primary.status === 401 || primary.status === 403 || primary.status === 404) {
+    return sendJson(res, 502, {
+      error:
+        "The AI service rejected the request. Please check the model and API project configuration."
+    });
+  }
+
+  return sendJson(res, 502, {
+    error: "I couldn't connect to the AI service. Please try again."
+  });
 };
